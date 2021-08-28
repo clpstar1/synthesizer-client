@@ -6,7 +6,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "npm run build && electron ./dist/main.js",
+    "start": "npm run build && node ./dist/wave.js",
+    "debug": "npm run build && node --inspect ./dist/wave.js",
     "test": "mocha -r ts-node/register 'tests/**/*.ts'"
   },
   "repository": "https://github.com/electron/electron-quick-start-typescript",

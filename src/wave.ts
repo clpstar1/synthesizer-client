@@ -1,4 +1,6 @@
 import range from 'lodash/range'
+import { writeFileSync } from 'fs'
+import { play_audio } from './ffplay'
 
 interface WaveFunction {
     /**
@@ -40,15 +42,44 @@ class SquareWave implements WaveFunction {
 export class WaveBuilder {
 
     constructor(
-        private waveFunction: WaveFunction
+        private waveFunction: WaveFunction,
+        private buffer: Buffer
     ) { }
 
     /**
-     * build a wave in a given timeframe
+     * write the wave to the buffer supplied in the
+     * class constructor
      * @param from the start of the wave
-     * @param to the end of the wave
+     * @param to the end of the wave, if not supplied implies that from should be used as to
      */
-    getWave(from: number, to: number) {
-        return range(from, to + 1).map(this.waveFunction.waveAt)
+    writeWaveToBuffer(from: number, to: number = 0) {
+        const steps = from - to
+        const floatsize = 4
+        const bytesNeeded = steps * floatsize
+
+        if (this.buffer.byteLength < bytesNeeded){
+            throw new Error('supplied buffer is too small')
+        }
+
+        for (const step of range(steps)){
+            const val = this.waveFunction.waveAt(step / steps)
+            this.buffer.writeFloatLE(val, step * floatsize)
+        }
     }
 }
+
+function main(){
+    
+    const steps = 48000
+    const bufsize = steps * 4
+    const buf = Buffer.allocUnsafe(bufsize)
+
+    const wave = new SineWave(0.1, 400)
+    const waveBuilder = new WaveBuilder(wave, buf)
+
+    waveBuilder.writeWaveToBuffer(steps)
+
+    play_audio(buf)
+}
+
+main()
