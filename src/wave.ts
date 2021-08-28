@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import range from 'lodash/range'
 
 interface WaveFunction {
     /**
@@ -42,6 +42,6 @@ class WaveBuilder {
      * @param to the end of the wave
      */
     getWave(from: number, to: number){
-        return range
+        return range(from, to+1).map(this.waveFunction.waveAt)
     }
 }
