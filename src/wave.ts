@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 interface WaveFunction {
     /**
      * returns the value of the wave function at a given time
@@ -40,6 +42,6 @@ class WaveBuilder {
      * @param to the end of the wave
      */
     getWave(from: number, to: number){
-        throw new Error("Method not implemented")
+        return range
     }
 }
