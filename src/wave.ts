@@ -8,16 +8,23 @@ interface WaveFunction {
     waveAt(time: number): number
 }
 
-class SineWave implements WaveFunction{
+export class SineWave implements WaveFunction {
 
     constructor(
-        private amplitude: number,
-        private frequency: number, 
-        private phase: number
-    ) {}
+        private amplitude: number = 1,
+        private frequency: number = 1,
+        private phase: number = 0
+    ) { }
 
+    // https://en.wikipedia.org/wiki/Sine_wave
     waveAt(time: number): number {
-        throw new Error("Method not implemented.");
+        return this.amplitude * Math.sin(2 * Math.PI * this.frequency * time + this.degreeToRadians(this.phase))
+    }
+
+    // https://en.wikipedia.org/wiki/Radian
+    private degreeToRadians(degree: number) {
+        if (degree < 0) throw new Error(`degree is less than zero (${degree})`)
+        return degree * (Math.PI / 180)
     }
 }
 
@@ -26,22 +33,22 @@ class SquareWave implements WaveFunction {
     waveAt(time: number): number {
         throw new Error("Method not implemented.");
     }
-    
+
 }
 
 
-class WaveBuilder {
+export class WaveBuilder {
 
-    constructor (
+    constructor(
         private waveFunction: WaveFunction
-    ) {}
-    
+    ) { }
+
     /**
      * build a wave in a given timeframe
      * @param from the start of the wave
      * @param to the end of the wave
      */
-    getWave(from: number, to: number){
-        return range(from, to+1).map(this.waveFunction.waveAt)
+    getWave(from: number, to: number) {
+        return range(from, to + 1).map(this.waveFunction.waveAt)
     }
 }
