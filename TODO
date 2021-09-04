@@ -1,3 +1,0 @@
-- create a sinewave
-- pipe the contents to ffplay
-- load ffplay as a subprocess
